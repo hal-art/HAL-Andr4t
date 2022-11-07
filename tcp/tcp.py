@@ -36,8 +36,8 @@ class Socket:
             bool: 成功または失敗
         """
         try:
-            #self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-            #self.socket.bind((self.ip, int(self.port)))
+            self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+            self.socket.bind((self.ip, int(self.port)))
             Console.printl(Define.LogType.SUCCESS, "succeed bind socket!")
             return True
         except Exception as e:
