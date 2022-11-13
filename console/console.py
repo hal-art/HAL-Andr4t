@@ -1,13 +1,12 @@
 import sys
-
-from pathlib import Path
 from functools import singledispatch
+from pathlib import Path
 
 parent_dir = str(Path(__file__).parent.parent)
-sys.path.append(parent_dir + '\define')
-sys.path.append(parent_dir + '\date')
-from define import Define
+sys.path.append(parent_dir + r'\define')
+sys.path.append(parent_dir + r'\date')
 from date import Date
+from define import Define
 
 #  _   _ _  _   _              _              _      _  _   _
 # | | | | || | | |            / \   _ __   __| |_ __| || | | |_
@@ -16,12 +15,13 @@ from date import Date
 # |_| |_|  |_| |_|         /_/   \_\_| |_|\__,_|_|     |_|  \__|
 #                                                   coded by H4l
 
+
 class Console:
     prefix_color_dict = {
-        Define.LogType.INFO : "30m",
-        Define.LogType.ERROR : "31m",
-        Define.LogType.SUCCESS : "32m",
-        Define.LogType.WARNING : "33m",
+        Define.LogType.INFO: "30m",
+        Define.LogType.ERROR: "31m",
+        Define.LogType.SUCCESS: "32m",
+        Define.LogType.WARNING: "33m",
     }
     
     def __get_header(color: str, prefix: str) -> str:
@@ -35,7 +35,7 @@ class Console:
         Returns:
             str: ヘッダ文字列
         """
-        header = "\033[1m[\033[31m\033[0m\033[1m\033["+color+prefix+"\033[0m\033[1m]\033[0m " + Date.get_detail_date() + '\n'
+        header = "\033[1m[\033[31m\033[0m\033[1m\033[" + color + prefix +"\033[0m\033[1m]\033[0m " + Date.get_detail_date() + '\n'
         return header
     
     """
@@ -43,7 +43,7 @@ class Console:
     そのため、オーバーロードの引数の違いは必ず第一引数で指定すること。
     """
     @singledispatch
-    def printl(message:str, log_type:Define.LogType) -> None:
+    def printl(message: str, log_type: Define.LogType) -> None:
         """ログ出力
         
         Args:
@@ -53,7 +53,7 @@ class Console:
         color = Console.prefix_color_dict[log_type]
         prefix = log_type.name
         header = Console.__get_header(color=color, prefix=prefix)
-        print(header+message)
+        print(header + message)
         
     """
     @singledispatchは1つめの引数で判別を行う。
@@ -70,4 +70,4 @@ class Console:
         color = Console.prefix_color_dict[log_type]
         prefix = log_type.name
         header = Console.__get_header(color=color, prefix=prefix)
-        print(header+message.strerror)
+        print(header + message.strerror)

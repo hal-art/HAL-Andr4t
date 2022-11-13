@@ -7,6 +7,7 @@ from enum import Enum
 # |_| |_|  |_| |_|         /_/   \_\_| |_|\__,_|_|     |_|  \__|
 #                                                   coded by H4l
 
+
 class Define:
     class LogType(Enum):
         INFO = 1,

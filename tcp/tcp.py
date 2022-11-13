@@ -4,8 +4,8 @@ import sys
 from pathlib import Path
 
 parent_dir = str(Path(__file__).parent.parent)
-sys.path.append(parent_dir + '\console')
-sys.path.append(parent_dir + '\define')
+sys.path.append(parent_dir + r'\console')
+sys.path.append(parent_dir + r'\define')
 
 from console import Console
 from define import Define
@@ -16,6 +16,7 @@ from define import Define
 # |  _  |__   _| | |_____|  / ___ \| | | | (_| | |  |__   _| |_
 # |_| |_|  |_| |_|         /_/   \_\_| |_|\__,_|_|     |_|  \__|
 #                                                   coded by H4l
+
 
 class Socket:
     def __init__(self, ip, port) -> None:

