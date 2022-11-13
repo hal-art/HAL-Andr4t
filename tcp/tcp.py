@@ -38,8 +38,8 @@ class Socket:
         try:
             self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
             self.socket.bind((self.ip, int(self.port)))
-            Console.printl(Define.LogType.SUCCESS, "succeed bind socket!")
+            Console.printl("ソケットバインド完了", Define.LogType.SUCCESS)
             return True
         except Exception as e:
-            Console.printl(Define.LogType.ERROR, e)
+            Console.printl(e, Define.LogType.ERROR)
             return False

