@@ -35,7 +35,7 @@ class Console:
         Returns:
             str: ヘッダ文字列
         """
-        header = "\033[1m[\033[31m\033[0m\033[1m\033[" + color + prefix +"\033[0m\033[1m]\033[0m " + Date.get_detail_date() + '\n'
+        header = "\033[1m[\033[31m\033[0m\033[1m\033[" + color + prefix + "\033[0m\033[1m]\033[0m " + Date.get_detail_date() + '\n'
         return header
     
     """
@@ -60,7 +60,7 @@ class Console:
     そのため、オーバーロードの引数の違いは必ず第一引数で指定すること。
     """
     @printl.register
-    def printl_1(message: Exception, log_type:Define.LogType) -> None:
+    def printl_1(message: Exception, log_type: Define.LogType) -> None:
         """ログ出力(オーバーロード)
 
         Args:
