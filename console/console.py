@@ -70,4 +70,4 @@ class Console:
         color = Console.prefix_color_dict[log_type]
         prefix = log_type.name
         header = Console.__get_header(color=color, prefix=prefix)
-        print(header + message.strerror)
+        print(header + message.args[0])

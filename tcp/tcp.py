@@ -19,7 +19,9 @@ from define import Define
 
 
 class Socket:
-    def __init__(self, ip, port) -> None:
+    QUEUE_MAX_NUMBER = 1
+    
+    def __init__(self, ip: str, port: int) -> None:
         """コンストラクタ
 
         Args:
@@ -29,7 +31,12 @@ class Socket:
         self.ip = ip
         self.port = port
         self.socket = socket.socket(type=socket.SOCK_STREAM)
-            
+        
+        # TODO リリース時、消しておくこと　デバッグコード(通信相手設定処理)
+        if (__debug__):
+            self.ip = socket.gethostname()
+            self.port = '1234'
+
     def start(self) -> bool:
         """バインド
 
@@ -39,8 +46,25 @@ class Socket:
         try:
             self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
             self.socket.bind((self.ip, int(self.port)))
-            Console.printl("ソケットバインド完了", Define.LogType.SUCCESS)
+            self.socket.listen(Socket.QUEUE_MAX_NUMBER)
+            Console.printl(f"Succeed to bind to {self.ip}", Define.LogType.SUCCESS)
             return True
         except Exception as e:
             Console.printl(e, Define.LogType.ERROR)
             return False
+        
+    def send(self) -> bool:
+        while True:
+            try:
+                android_device, address = self.socket.accept()
+                Console.printl(f"Succeed to connect to {address}", Define.LogType.SUCCESS)
+                
+                android_device.send(bytes("Hello World", 'utf-8'))
+                Console.printl("Succeed to send bytes", Define.LogType.SUCCESS)
+                
+                android_device.close()
+                Console.printl(f"Succeed to close connection from {address}", Define.LogType.SUCCESS)
+                
+            except Exception as e:
+                Console.printl(e, Define.LogType.ERROR)
+                return False
