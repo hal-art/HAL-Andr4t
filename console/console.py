@@ -1,6 +1,7 @@
 import sys
-from functools import singledispatch
 from pathlib import Path
+
+from multipledispatch import dispatch
 
 parent_dir = str(Path(__file__).parent.parent)
 sys.path.append(parent_dir + r'\define')
@@ -38,11 +39,7 @@ class Console:
         header = "\033[1m[\033[31m\033[0m\033[1m\033[" + color + prefix + "\033[0m\033[1m]\033[0m " + Date.get_detail_date() + '\n'
         return header
     
-    """
-    @singledispatchは1つめの引数で判別を行う。
-    そのため、オーバーロードの引数の違いは必ず第一引数で指定すること。
-    """
-    @singledispatch
+    @dispatch(str, Define.LogType)
     def printl(message: str, log_type: Define.LogType) -> None:
         """ログ出力
         
@@ -54,13 +51,9 @@ class Console:
         prefix = log_type.name
         header = Console.__get_header(color=color, prefix=prefix)
         print(header + message)
-        
-    """
-    @singledispatchは1つめの引数で判別を行う。
-    そのため、オーバーロードの引数の違いは必ず第一引数で指定すること。
-    """
-    @printl.register
-    def printl_1(message: Exception, log_type: Define.LogType) -> None:
+    
+    @dispatch(Exception, Define.LogType)
+    def printl(message: Exception, log_type: Define.LogType) -> None:
         """ログ出力(オーバーロード)
 
         Args:
@@ -70,4 +63,5 @@ class Console:
         color = Console.prefix_color_dict[log_type]
         prefix = log_type.name
         header = Console.__get_header(color=color, prefix=prefix)
-        print(header + message.args[0])
+        for arg in message.args:
+            print(header + arg)

@@ -20,7 +20,7 @@ class Andr4t:
         self.socket.start()
     
     def get_shell(self) -> None:
-        if (not self.socket.send()):
+        if (not self.socket.send(bytes("Hello World", 'utf-8'))):
             return
 
 

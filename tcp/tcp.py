@@ -53,18 +53,24 @@ class Socket:
             Console.printl(e, Define.LogType.ERROR)
             return False
         
-    def send(self) -> bool:
-        while True:
-            try:
-                android_device, address = self.socket.accept()
-                Console.printl(f"Succeed to connect to {address}", Define.LogType.SUCCESS)
-                
-                android_device.send(bytes("Hello World", 'utf-8'))
-                Console.printl("Succeed to send bytes", Define.LogType.SUCCESS)
-                
-                android_device.close()
-                Console.printl(f"Succeed to close connection from {address}", Define.LogType.SUCCESS)
-                
-            except Exception as e:
-                Console.printl(e, Define.LogType.ERROR)
-                return False
+    def send(self, send_data: bytes) -> bool:
+        """
+        データ送信
+
+        Returns:
+            bool: 送信結果
+        """
+        try:
+            android_device, address = self.socket.accept()
+            Console.printl(f"Succeed to connect to {address}", Define.LogType.SUCCESS)
+            
+            android_device.send(send_data)
+            Console.printl("Succeed to send bytes", Define.LogType.SUCCESS)
+            
+            android_device.close()
+            Console.printl(f"Succeed to close connection from {address}", Define.LogType.SUCCESS)
+            return True
+            
+        except Exception as e:
+            Console.printl(e, Define.LogType.ERROR)
+            return False
