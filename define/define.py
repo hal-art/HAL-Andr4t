@@ -14,3 +14,8 @@ class Define:
         SUCCESS = 2,
         WARNING = 3,
         ERROR = 4,
+
+    class Command:
+        HEADER = "H4L "
+        CMD_GET_STATUS = "STATUS"
+        CMD_GET_SCREEN_PICTURE = "SCREEN PICTURE"
