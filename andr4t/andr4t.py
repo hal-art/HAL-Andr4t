@@ -22,9 +22,3 @@ class Andr4t:
     def get_shell(self) -> None:
         if (not self.socket.send(bytes("Hello World", 'utf-8'))):
             return
-
-
-# TODO デバッグコード(通信相手設定処理)
-if (__debug__):
-    andr4t = Andr4t("xxx.xxx.xx.x", 0000)
-    andr4t.get_shell()
