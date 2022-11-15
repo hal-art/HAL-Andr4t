@@ -19,7 +19,6 @@ from define import Define
 
 
 class Socket:
-    QUEUE_MAX_NUMBER = 1
     
     def __init__(self, ip: str, port: int) -> None:
         """コンストラクタ
@@ -28,26 +27,38 @@ class Socket:
             ip (any): ipアドレス
             port (any): ポート
         """
+        "受信バッファの最大値"
+        RECEIVE_BUFFER_NUMBER = 1024
+    
         self.ip = ip
         self.port = port
         self.socket = socket.socket(type=socket.SOCK_STREAM)
+        self.__blocker = False
+        self.__read_size = RECEIVE_BUFFER_NUMBER
         
         # TODO リリース時、消しておくこと　デバッグコード(通信相手設定処理)
         if (__debug__):
             self.ip = socket.gethostname()
-            self.port = '1234'
-
+            self.port = 1234
+            
     def start(self) -> bool:
-        """バインド
+        """接続の確立
 
         Returns:
-            bool: 成功または失敗
+            bool: 接続結果
         """
+        "基本は、送信・受信の2つのキューを使用する"
+        "エラー発生時に返答を返すためのキューとして + 1"
+        QUEUE_MAX_NUMBER = 2 + 1
         try:
             self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-            self.socket.bind((self.ip, int(self.port)))
-            self.socket.listen(Socket.QUEUE_MAX_NUMBER)
+            self.socket.bind((self.ip, self.port))
+            self.socket.listen(QUEUE_MAX_NUMBER)
             Console.printl(f"Succeed to bind to {self.ip}", Define.LogType.SUCCESS)
+            
+            self.handler = self.__accept()
+            if self.handler is None:
+                raise Exception("handler is None")
             return True
         except Exception as e:
             Console.printl(e, Define.LogType.ERROR)
@@ -61,16 +72,59 @@ class Socket:
             bool: 送信結果
         """
         try:
-            android_device, address = self.socket.accept()
-            Console.printl(f"Succeed to connect to {address}", Define.LogType.SUCCESS)
-            
-            android_device.send(send_data)
+            self.handler.send(send_data)
             Console.printl("Succeed to send bytes", Define.LogType.SUCCESS)
             
-            android_device.close()
-            Console.printl(f"Succeed to close connection from {address}", Define.LogType.SUCCESS)
+            self.handler.close()
+            Console.printl("Succeed to close connection", Define.LogType.SUCCESS)
             return True
             
         except Exception as e:
             Console.printl(e, Define.LogType.ERROR)
             return False
+        
+    def receive(self) -> bytes:
+        """
+        データ受信
+
+        Returns:
+            bytes: 応答データ
+        """
+        while True:
+            try:
+                "#####  Socketクラスでは受信結果をバイナリデータで返却するだけ。#####"
+                "#####           デシリアライズは受け手の責務とする            #####"
+                
+                "self.__blockerがTrueの場合は前回の処理を解析中なのでスルー"
+                if self.__blocker is True:
+                    self.send("ERROR __blocker flag is enable".encode('utf-8'))
+                    continue
+                
+                self.buffer = self.handler.recv(self.__read_size)
+            except Exception as e:
+                Console.printl(e, Define.LogType.ERROR)
+                return False
+            
+    def set_blocker(self, block: bool) -> None:
+        """
+        ブロッカーのフラグのセッター
+
+        Args:
+            block (bool): ブロックのオン・オフ
+        """
+        self.__blocker = block
+        
+    def __accept(self) -> socket:
+        """
+        接続処理
+
+        Returns:
+            socket: クライアント側ハンドラ
+        """
+        try:
+            handle, address = self.socket.accept()
+            Console.printl(f"Succeed to connect to {address}", Define.LogType.SUCCESS)
+            return handle
+        except Exception as e:
+            Console.printl(e, Define.LogType.ERROR)
+            return None

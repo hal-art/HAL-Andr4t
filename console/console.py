@@ -64,4 +64,4 @@ class Console:
         prefix = log_type.name
         header = Console.__get_header(color=color, prefix=prefix)
         for arg in message.args:
-            print(header + arg)
+            print(header + str(arg))

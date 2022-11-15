@@ -11,6 +11,18 @@ class GhostClient:
         msg = self.socket.recv(1024)
         print(msg.decode("utf-8"))
         
-        
+    def send(self) -> None:
+        while True:
+            msg = input(">")
+            self.socket.send(msg.encode("utf-8"))
+
+
 ghost_client = GhostClient()
-ghost_client.receive()
+menu = input("1:receive \n"
+             "2:send \n"
+             ">")
+if (menu == "1"):
+    ghost_client.receive()
+    
+elif (menu == "2"):
+    ghost_client.send()
