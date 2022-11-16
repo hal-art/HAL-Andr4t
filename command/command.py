@@ -3,14 +3,21 @@ from pathlib import Path
 
 parent_dir = str(Path(__file__).parent.parent)
 sys.path.append(parent_dir + r'\define')
+sys.path.append(parent_dir + r'\console')
 
 from define import Define
+from console import Console
 
 
 class Command:
+    __command_dict = {
+        "Status": Define.Command.CMD_GET_STATUS,
+        "TakeScreenPicture": Define.Command.CMD_GET_SCREEN_PICTURE,
+    }
+    
     # TODO 戻り値は仮の為、コマンド仕様確定後必ず戻すこと
     # TODO 関数ヘッダを必ず記載すること
-    def make_command() -> str:
+    def make_command(command: str) -> str:
         """
         コマンドデータ生成
         
@@ -21,5 +28,9 @@ class Command:
         Returns:
             str: コマンドデータ
         """
-        packet = bytes(Define.Command.HEADER + Define.Command.CMD_GET_STATUS)
+        # 存在しないコマンドが指定された場合
+        if not Command.__command_dict.__contains__(command):
+            Console.printl(f"Not exists {command}", Define.LogType.ERROR)
+            return None
+        packet = bytes(Define.Command.HEADER + Command.__command_dict[command], 'utf-8')
         return packet

