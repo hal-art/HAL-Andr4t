@@ -78,8 +78,8 @@ class Socket:
             self.__handler.send(send_data)
             Console.printl("Succeed to send bytes", Define.LogType.SUCCESS)
             
-            self.__handler.close()
-            Console.printl("Succeed to close connection", Define.LogType.SUCCESS)
+            # self.__handler.close()
+            # Console.printl("Succeed to close connection", Define.LogType.SUCCESS)
             return True
             
         except Exception as e:
@@ -138,5 +138,5 @@ class Socket:
         並列スレッド実行
         """
         # 読込スレッド開始
-        self.__read_thread = threading.Thread(target=self.receive)
-        self.__read_thread.run()
+        # self.__read_thread = threading.Thread(target=self.receive)
+        # self.__read_thread.run()

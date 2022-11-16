@@ -8,8 +8,9 @@ class GhostClient:
         self.__socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         
     def receive(self) -> None:
-        msg = self.__socket.recv(1024)
-        print(msg.decode("utf-8"))
+        while True:
+            msg = self.__socket.recv(1024)
+            print(msg.decode("utf-8"))
         
     def send(self) -> None:
         while True:
