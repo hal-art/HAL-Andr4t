@@ -61,6 +61,7 @@ class Socket:
             if self.__handler is None:
                 raise Exception("handler is None")
             self.__run_thread()
+            Console.printl("Succeed to start", Define.LogType.SUCCESS)
             return True
         except Exception as e:
             Console.printl(e, Define.LogType.ERROR)
@@ -104,6 +105,7 @@ class Socket:
                     continue
                 
                 self.buffer = self.__handler.recv(self.__read_size)
+                Console.printl(f"Succeed to receive {self.buffer.decode('utf-8')}", Define.LogType.SUCCESS)
             except Exception as e:
                 Console.printl(e, Define.LogType.ERROR)
             
