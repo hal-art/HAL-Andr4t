@@ -16,9 +16,9 @@ from tcp import Socket
 
 class Andr4t:
     def __init__(self, ip, port) -> None:
-        self.socket = Socket(ip, port)
-        self.socket.start()
+        self.__socket = Socket(ip, port)
+        self.__socket.start()
     
     def get_shell(self) -> None:
-        if (not self.socket.send(bytes("Hello World", 'utf-8'))):
+        if (not self.__socket.send(bytes("Hello World", 'utf-8'))):
             return

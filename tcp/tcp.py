@@ -30,16 +30,16 @@ class Socket:
         "受信バッファの最大値"
         RECEIVE_BUFFER_NUMBER = 1024
     
-        self.ip = ip
-        self.port = port
-        self.socket = socket.socket(type=socket.SOCK_STREAM)
+        self.__ip = ip
+        self.__port = port
+        self.__socket = socket.socket(type=socket.SOCK_STREAM)
         self.__blocker = False
         self.__read_size = RECEIVE_BUFFER_NUMBER
         
         # TODO リリース時、消しておくこと　デバッグコード(通信相手設定処理)
         if (__debug__):
-            self.ip = socket.gethostname()
-            self.port = 1234
+            self.__ip = socket.gethostname()
+            self.__port = 1234
             
     def start(self) -> bool:
         """接続の確立
@@ -51,13 +51,13 @@ class Socket:
         "エラー発生時に返答を返すためのキューとして + 1"
         QUEUE_MAX_NUMBER = 2 + 1
         try:
-            self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-            self.socket.bind((self.ip, self.port))
-            self.socket.listen(QUEUE_MAX_NUMBER)
-            Console.printl(f"Succeed to bind to {self.ip}", Define.LogType.SUCCESS)
+            self.__socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+            self.__socket.bind((self.__ip, self.__port))
+            self.__socket.listen(QUEUE_MAX_NUMBER)
+            Console.printl(f"Succeed to bind to {self.__ip}", Define.LogType.SUCCESS)
             
-            self.handler = self.__accept()
-            if self.handler is None:
+            self.__handler = self.__accept()
+            if self.__handler is None:
                 raise Exception("handler is None")
             return True
         except Exception as e:
@@ -72,10 +72,10 @@ class Socket:
             bool: 送信結果
         """
         try:
-            self.handler.send(send_data)
+            self.__handler.send(send_data)
             Console.printl("Succeed to send bytes", Define.LogType.SUCCESS)
             
-            self.handler.close()
+            self.__handler.close()
             Console.printl("Succeed to close connection", Define.LogType.SUCCESS)
             return True
             
@@ -100,7 +100,7 @@ class Socket:
                     self.send("ERROR __blocker flag is enable".encode('utf-8'))
                     continue
                 
-                self.buffer = self.handler.recv(self.__read_size)
+                self.buffer = self.__handler.recv(self.__read_size)
             except Exception as e:
                 Console.printl(e, Define.LogType.ERROR)
                 return False
@@ -122,7 +122,7 @@ class Socket:
             socket: クライアント側ハンドラ
         """
         try:
-            handle, address = self.socket.accept()
+            handle, address = self.__socket.accept()
             Console.printl(f"Succeed to connect to {address}", Define.LogType.SUCCESS)
             return handle
         except Exception as e:

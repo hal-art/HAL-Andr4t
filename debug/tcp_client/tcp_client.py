@@ -3,18 +3,18 @@ import socket
 
 class GhostClient:
     def __init__(self) -> None:
-        self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.socket.connect((socket.gethostname(), 1234))
-        self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        self.__socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.__socket.connect((socket.gethostname(), 1234))
+        self.__socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
         
     def receive(self) -> None:
-        msg = self.socket.recv(1024)
+        msg = self.__socket.recv(1024)
         print(msg.decode("utf-8"))
         
     def send(self) -> None:
         while True:
             msg = input(">")
-            self.socket.send(msg.encode("utf-8"))
+            self.__socket.send(msg.encode("utf-8"))
 
 
 ghost_client = GhostClient()
