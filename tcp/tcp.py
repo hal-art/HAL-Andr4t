@@ -138,5 +138,5 @@ class Socket:
         並列スレッド実行
         """
         # 読込スレッド開始
-        # self.__read_thread = threading.Thread(target=self.receive)
-        # self.__read_thread.run()
+        self.__read_thread = threading.Thread(target=self.receive)
+        self.__read_thread.start()
