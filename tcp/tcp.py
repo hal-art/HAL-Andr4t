@@ -1,5 +1,6 @@
 import socket
 import sys
+import threading
 
 from pathlib import Path
 
@@ -59,6 +60,7 @@ class Socket:
             self.__handler = self.__accept()
             if self.__handler is None:
                 raise Exception("handler is None")
+            self.__run_thread()
             return True
         except Exception as e:
             Console.printl(e, Define.LogType.ERROR)
@@ -83,12 +85,13 @@ class Socket:
             Console.printl(e, Define.LogType.ERROR)
             return False
         
-    def receive(self) -> bytes:
+    def receive(self) -> None:
         """
         データ受信
-
-        Returns:
-            bytes: 応答データ
+            
+        Remarks:
+            メインスレッドでコールすると処理が停止してしまう。
+            その為、必ず別スレッドにてコールすること！
         """
         while True:
             try:
@@ -103,7 +106,6 @@ class Socket:
                 self.buffer = self.__handler.recv(self.__read_size)
             except Exception as e:
                 Console.printl(e, Define.LogType.ERROR)
-                return False
             
     def set_blocker(self, block: bool) -> None:
         """
@@ -128,3 +130,11 @@ class Socket:
         except Exception as e:
             Console.printl(e, Define.LogType.ERROR)
             return None
+        
+    def __run_thread(self) -> None:
+        """
+        並列スレッド実行
+        """
+        # 読込スレッド開始
+        self.__read_thread = threading.Thread(target=self.receive)
+        self.__read_thread.run()
