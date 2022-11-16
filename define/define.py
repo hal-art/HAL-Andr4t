@@ -10,12 +10,18 @@ from enum import Enum
 
 class Define:
     class LogType(Enum):
+        """
+        ログ種
+        """
         INFO = 1,
         SUCCESS = 2,
         WARNING = 3,
         ERROR = 4,
 
     class Command:
+        """
+        コマンド種
+        """
         HEADER = "H4L "
         CMD_GET_STATUS = "STATUS"
         CMD_GET_SCREEN_PICTURE = "SCREEN PICTURE"

