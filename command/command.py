@@ -15,8 +15,6 @@ class Command:
         "TakeScreenPicture": Define.Command.CMD_GET_SCREEN_PICTURE,
     }
     
-    # TODO 戻り値は仮の為、コマンド仕様確定後必ず戻すこと
-    # TODO 関数ヘッダを必ず記載すること
     def make_command(command: str) -> str:
         """
         コマンドデータ生成
