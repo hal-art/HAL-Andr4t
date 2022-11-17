@@ -108,7 +108,24 @@ class Socket:
                 Console.printl(f"Succeed to receive {self.buffer.decode('utf-8')}", Define.LogType.SUCCESS)
             except Exception as e:
                 Console.printl(e, Define.LogType.ERROR)
-            
+                
+    # TODO まだこのクローズ処理はどこでも呼ばれていないので、必ず呼ぶようにすること
+    def close(self) -> bool:
+        """
+        クローズ処理
+
+        Returns:
+            bool: クローズ結果
+        """
+        try:
+            self.__handler.close()
+            Console.printl("Succeed to close connection", Define.LogType.SUCCESS)
+            return True
+        
+        except Exception as e:
+            Console.printl(e, Define.LogType.ERROR)
+            return False
+    
     def set_blocker(self, block: bool) -> None:
         """
         ブロッカーのフラグのセッター
