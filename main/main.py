@@ -18,6 +18,7 @@ def main() -> None:
     """
     メイン処理
     """
+    #テストです！
     #args = sys.argv   #sysによる引数の取得。argsにリストで格納
     # TODO args parserを用いて、socket通信用のip, portを指定する。
     parser = argparse.ArgumentParser(descriotion="コマンドラインの引数を取得")   #パーサー作成
