@@ -13,12 +13,57 @@ from andr4t import Andr4t
 # |_| |_|  |_| |_|         /_/   \_\_| |_|\__,_|_|     |_|  \__|
 #                                                   coded by H4l
 
+def __args_analyze_ip(args):
+    # "-a"はIPアドレス引数の先頭字
+    ARG_IP_ADDRESS_PREFIX = "-a"
+
+    IP_ADDRESS_OCTET_MAX = 4
+
+    IP_ADDRESS_MIN = 0
+    IP_ADDRESS_MAX = 255
+
+    if(not args.arg1 is ARG_IP_ADDRESS_PREFIX):
+        print("-aを先頭字として入力してください")
+        return False
+
+    iplist=args.arg2.split('.')
+
+    if(not len(iplist) is IP_ADDRESS_OCTET_MAX):
+        print("IPアドレスの記述にミスがあります。")
+        return False
+
+    for ip in iplist:
+        try:
+            if(IP_ADDRESS_MIN > int(ip) or
+                IP_ADDRESS_MAX < int(ip)):
+                print("エラー")
+                return False
+        except Exception as e:
+            print(e)
+            return False
+    return True
+
+def __args_analyze_port(args):
+    # "-p"はport番号引数の先頭字
+    ARG_port_ADDRESS_PREFIX = "-p"
+
+    if(not args.arg3 is ARG_port_ADDRESS_PREFIX):
+        print("-pを先頭字として入力してください")
+        return False
+    
+    try:
+        int(args.arg4)
+    except:
+        print("port番号は数値のみ入力してください")
+        return False
+    
+    return True
+
 
 def main() -> None:
     """
     メイン処理
     """
-    #テストです！
     #args = sys.argv   #sysによる引数の取得。argsにリストで格納
     # TODO args parserを用いて、socket通信用のip, portを指定する。
     parser = argparse.ArgumentParser(descriotion="コマンドラインの引数を取得")   #パーサー作成
@@ -28,36 +73,18 @@ def main() -> None:
     parser.add_argument("arg4",help="TCP port番号",type=str)
     args = parser.parse_args( )   #引数解析
 
-    ip=""
-    port=0
-    if(args.arg1=="-a"):   #-aと記述されているか？
-        iplist=args.arg2.split('.')   #ipアドレスを.で区切りそれぞれiplistに格納
-        if(len(iplist)==4):   #iplistの要素数が4つであるか
-            for i in range(4):   #4つの値を検査
-                if(0<=int(iplist[i]) and int(iplist[i])<=255):   #ipが0～255であるか
-                    pass
-                else:
-                    print("IPアドレスの記述にミスがあります")
-                    break
-            ip=args.arg2
-        else:
-            print("IPアドレスの記述にミスがあります")
-    else:
-        print("IPアドレスは-aから記述してください")
+    __args_analyze_ip(args)
+    __args_analyze_port(args)
+
+    if(not(__args_analyze_ip(args) and __args_analyze_port(args))):
+        return False
+
+    IP=args.arg2
+    port=int(args.arg4)
     
-    if(ip==args.arg2):   #IPアドレスの記述が正常であった場合
-        if(args.arg3=="-p"):   #-pと記述されているか？
-            try:
-                port=int(args.arg4)   #int型変換
-            except:
-                print("ポート番号は数値のみ記述してください")   #数値以外の記載があった場合
-        else:
-            print("ポート番号は-pから記述してください")   #ポート番号記述前に-pを記述していない場合
-
-    print(ip,port)  
-
-    android = Andr4t(ip, port) #androidはAndr4tのインスタンス
+    android = Andr4t(IP,port) #androidはAndr4tのインスタンス
     android.get_shell()
+
 
 
 if (__name__ == "__main__"):
