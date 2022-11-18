@@ -1,4 +1,4 @@
-package com.example.hal_client;
+package com.example.halClient;
 
 import org.junit.Test;
 

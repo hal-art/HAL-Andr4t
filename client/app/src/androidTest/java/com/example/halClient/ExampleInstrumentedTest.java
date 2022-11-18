@@ -1,4 +1,4 @@
-package com.example.hal_client;
+package com.example.halClient;
 
 import android.content.Context;
 
@@ -21,6 +21,7 @@ public class ExampleInstrumentedTest {
     public void useAppContext() {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
-        assertEquals("com.example.hal_client", appContext.getPackageName());
+
+        assertEquals("com.example.reverseshell2", appContext.getPackageName());
     }
 }
