@@ -1,0 +1,1 @@
+cmd /k "title H4L-Andr4t && cd %1 && cls && git status"
